@@ -322,9 +322,12 @@
         methods: {
 
             formatDate(dateStr) {
-                if (!dateStr) return '暂无日期'; // 如果没有日期，显示“暂无日期”
-                const date = new Date(dateStr);  // 将日期字符串转换为 Date 对象
-                return date.toISOString().split('T')[0]; // 提取 YYYY-MM-DD 部分
+                if (!dateStr) return '暂无日期';
+                const date = new Date(dateStr);
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // 月份从 0 开始
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
             },
 
 
