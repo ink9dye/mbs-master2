@@ -382,7 +382,20 @@
                 this.addBookDialogVisible = true; // 显示添加图书对话框
             },
             resetAddBookForm() {
-                this.$refs['addBookForm'].resetFields(); // 重置添加图书表单
+                // 重置表单数据对象
+                this.addBookForm = {
+                    bid: '',
+                    name: '',
+                    card: '',
+                    author: '',
+                    num: '1',
+                    press: '',
+                    type: '',
+                    publishDate: ''
+                };
+
+                // 如果存在校验状态，也清除
+                this.$refs['addBookForm']?.clearValidate();
             },
             submitAddBookForm() {
                 this.$refs['addBookForm'].validate(valid => {
@@ -396,6 +409,7 @@
                                     this.addBookDialogVisible = false;
                                     this.init();
                                     this.$message.success('添加图书成功！');
+
                                 } else {
                                     // 添加失败，显示错误信息
                                     this.$message.error(res.data.msg || '添加图书失败！');
@@ -485,6 +499,7 @@
                             .then(res => {
                                 if (res.data.code === 1) {
                                     this.$message.success('添加图书成功！');
+                                    this.resetAddBookForm(); // 清空表单内容
                                     this.handleQuery();
                                 } else {
                                     this.$message.error(res.data.msg || '添加图书失败！');
