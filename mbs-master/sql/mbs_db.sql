@@ -36,7 +36,7 @@ CREATE TABLE `admin_info` (
 
 LOCK TABLES `admin_info` WRITE;
 /*!40000 ALTER TABLE `admin_info` DISABLE KEYS */;
-INSERT INTO `admin_info` VALUES (2,'root','63a9f0ea7bb98050796b649e85481845');
+INSERT INTO `admin_info` VALUES (2,'root','202cb962ac59075b964b07152d234b70');
 /*!40000 ALTER TABLE `admin_info` ENABLE KEYS */;
 UNLOCK TABLES;
 

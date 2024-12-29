@@ -18,34 +18,34 @@ public class BookInfoController {
    private BooksInfoService booksInfoService;
 
     @RequestMapping("/page")
-    public R<Page<BooksInfo>> page(Integer page,Integer pageSize,String name,String author,String type,String card,Integer status){
+    public R<Page<BooksInfo>> page(Integer page, Integer pageSize, String name, String author, String type, String card, Integer status) {
         log.info("[查询图书函数]分页查询请求：page={}, pageSize={}, name={}, author={}, type={}, card={}, status={}",
                 page, pageSize, name, author, type, card, status);
-        Page<BooksInfo> booksInfoPage = new Page<>(page,pageSize);
+
+        Page<BooksInfo> booksInfoPage = new Page<>(page, pageSize);
         LambdaQueryWrapper<BooksInfo> booksInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if (status != null){
 
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(name),BooksInfo::getName,name);
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(author),BooksInfo::getAuthor,author);
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(type),BooksInfo::getType,type);
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(card),BooksInfo::getCard,card);
-            booksInfoLambdaQueryWrapper.eq(BooksInfo::getStatus,status);
-
-        }
-        else {
-
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(name),BooksInfo::getName,name);
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(author),BooksInfo::getAuthor,author);
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(type),BooksInfo::getType,type);
-            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(card),BooksInfo::getCard,card);
-
+        // 添加查询条件
+        if (status != null) {
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(name), BooksInfo::getName, name);
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(author), BooksInfo::getAuthor, author);
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(type), BooksInfo::getType, type);
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(card), BooksInfo::getCard, card);
+            booksInfoLambdaQueryWrapper.eq(BooksInfo::getStatus, status);
+        } else {
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(name), BooksInfo::getName, name);
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(author), BooksInfo::getAuthor, author);
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(type), BooksInfo::getType, type);
+            booksInfoLambdaQueryWrapper.like(StringUtils.isNotEmpty(card), BooksInfo::getCard, card);
         }
 
+        // 按照出版日期逆序排序
+        booksInfoLambdaQueryWrapper.orderByDesc(BooksInfo::getPublishDate);
 
-
-
-        booksInfoService.page(booksInfoPage,booksInfoLambdaQueryWrapper);
+        // 分页查询
+        booksInfoService.page(booksInfoPage, booksInfoLambdaQueryWrapper);
         log.info("[查询图书函数]分页查询结果：{}", booksInfoPage.getRecords());
+
         return R.success(booksInfoPage);
     }
 

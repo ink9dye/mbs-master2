@@ -73,6 +73,16 @@
         >
         </el-table-column>
 
+        <el-table-column
+                prop="publishDate"
+                label="出版日期">
+            <template slot-scope="scope">
+                {{ formatDate(scope.row.publishDate) }}
+            </template>
+        </el-table-column>
+
+
+
         <el-table-column label="状态">
             <template slot-scope="scope">
                 <!-- 根据 status 的值动态渲染不同的内容 -->
@@ -81,6 +91,9 @@
             </template>
 
         </el-table-column>
+
+
+
 
 
         <el-table-column
@@ -171,6 +184,12 @@
                         this.counts = res.data.data.total;
                     })
             },
+            formatDate(dateStr) {
+                if (!dateStr) return '暂无日期'; // 如果没有日期，显示“暂无日期”
+                const date = new Date(dateStr);  // 将日期字符串转换为 Date 对象
+                return date.toISOString().split('T')[0]; // 提取 YYYY-MM-DD 部分
+            },
+
             handleSearch() {
                 this.page = 1; // 重置页码为1
                 this.init(); // 执行搜索操作
