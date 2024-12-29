@@ -18,260 +18,234 @@
 <style>
 
 </style>
-
 <body>
 
 <div id="app">
 
+    <!-- 添加图书按钮 -->
     <el-button
             style="background-color: black;color: white"
             type="primary"
             @click="showAddBookDialog()"
-    >
-        + 添加图书
+    ><!-- 点击时触发 showAddBookDialog() 方法，打开添加图书对话框 -->
+    + 添加图书
     </el-button>
 
-
+    <!-- 搜索输入框 -->
     <el-input v-model="searchText" placeholder="请输入搜索内容" style="width: 200px"  @keyup.enter="handleSearch"></el-input>
+    <!-- 搜索类型选择框 -->
     <el-select v-model="searchType" placeholder="选择搜索类型" style="width: 150px">
-        <el-option label="按书名搜索" value="name"></el-option>
-        <el-option label="按作者搜索" value="author"></el-option>
-        <el-option label="按分类搜索" value="type"></el-option>
-        <el-option label="按图书号搜索" value="card"></el-option>
+        <el-option label="按书名搜索" value="name"></el-option>  <!-- 按书名搜索 -->
+        <el-option label="按作者搜索" value="author"></el-option>  <!-- 按作者搜索 -->
+        <el-option label="按分类搜索" value="type"></el-option>  <!-- 按分类搜索 -->
+        <el-option label="按图书号搜索" value="card"></el-option>  <!-- 按图书号搜索 -->
     </el-select>
+    <!-- 搜索按钮 -->
     <el-button type="primary" @click="handleSearch">搜索</el-button>
 
-
+    <!-- 批量删除按钮，浮动在右侧 -->
     <el-button
             style="background-color: red;color: white;float:right;margin-right: 50px"
             type="primary"
             @click="batchDelete()"
-    >
-        批量删除
+    ><!-- 点击时触发 batchDelete() 方法 -->
+    批量删除
     </el-button>
 
+    <!-- 图书表格展示 -->
     <el-table style="padding: 20px"
               :data="tableData"
-              stripe
+    stripe
+    @selection-change="handleSelectionChange"
 
-              @selection-change="handleSelectionChange"
+    ><!-- 表格条纹效果 --> <!-- 数据来源于 tableData --> <!-- 选择项改变时触发 handleSelectionChange() 方法 -->
 
+    <el-table-column type="selection" width="55"></el-table-column>  <!-- 表格选择列 -->
+
+    <!-- 图书名列 -->
+    <el-table-column
+            prop="name"
+            label="图书名"
     >
+    </el-table-column>
 
+    <!-- 图书号列 -->
+    <el-table-column
+            prop="card"
+            label="图书号"
+    >
+    </el-table-column>
 
-        <el-table-column type="selection" width="55"></el-table-column>
-        <!--          图书分类名称）-->
-        <el-table-column
-                prop="name"
-                label="图书名"
-        >
-        </el-table-column>
-        <el-table-column
-                prop="card"
-                label="图书号"
-        >
-        </el-table-column>
-        <el-table-column
-                prop="author"
-                label="作者"
-        >
-        </el-table-column>
-        <el-table-column
-                prop="num"
-                label="数量"
-        >
-        </el-table-column>
-        <el-table-column
-                prop="press"
-                label="出版社"
-        >
-        </el-table-column>
+    <!-- 作者列 -->
+    <el-table-column
+            prop="author"
+            label="作者"
+    >
+    </el-table-column>
 
-        <el-table-column
-                prop="type"
-                label="分类类型"
-        >
-        </el-table-column>
+    <!-- 数量列 -->
+    <el-table-column
+            prop="num"
+            label="数量"
+    >
+    </el-table-column>
 
-<!--        <el-table-column label="状态">-->
-<!--            <template slot-scope="scope">-->
-<!--                &lt;!&ndash; 根据 status 的值动态渲染不同的内容 &ndash;&gt;-->
-<!--                <span v-if="scope.row.status === 2">未借出</span>-->
-<!--                <span v-else>借阅中</span>-->
-<!--            </template>-->
-<!--        </el-table-column>-->
-<!--        <el-table-column-->
-<!--                prop="status"-->
-<!--                label="状态"-->
-<!--        >-->
-<!--        </el-table-column>-->
+    <!-- 出版社列 -->
+    <el-table-column
+            prop="press"
+            label="出版社"
+    >
+    </el-table-column>
 
+    <!-- 分类类型列 -->
+    <el-table-column
+            prop="type"
+            label="分类类型"
+    >
+    </el-table-column>
 
-        <el-table-column
-                label="操作"
-                width="160"
-                align="center"
-        >
-            <template slot-scope="scope">
-                <el-button
-                        type="text"
-                        size="small"
-                        class="blueBug"
-                        @click="editHandle(scope.row)"
-                >
-                    修改
-                </el-button>
-                <el-button
-                        type="text"
-                        size="small"
-                        class="delBut non"
-                        @click="deleteHandle(scope.row)"
-                >
-                    删除
-                </el-button>
-            </template>
-        </el-table-column>
+    <!-- 操作列，包括修改和删除按钮 -->
+    <el-table-column
+            label="操作"
+            width="160"
+            align="center"
+    >
+        <template slot-scope="scope">
+            <!-- 修改按钮 -->
+            <el-button
+                    type="text"
+                    size="small"
+                    class="blueBug"
+                    @click="editHandle(scope.row)"
+            > <!-- 点击时触发 editHandle() 方法，编辑当前行 -->
+            修改
+            </el-button>
+            <!-- 删除按钮 -->
+            <el-button
+                    type="text"
+                    size="small"
+                    class="delBut non"
+                    @click="deleteHandle(scope.row)"
+            > <!-- 点击时触发 deleteHandle() 方法，删除当前行 -->
+            删除
+            </el-button>
+        </template>
+    </el-table-column>
     </el-table>
 
+    <!-- 添加图书对话框 -->
     <el-dialog
             title="添加图书"
             :visible.sync="addBookDialogVisible"
-            width="30%"
-            @close="resetAddBookForm"
-    >
-        <!-- 图书表单内容 -->
-        <el-form :model="addBookForm" ref="addBookForm" label-width="80px">
-            <el-form-item label="图书名" prop="name" :rules="[
-    { required: true, message: '图书名不能为空', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.name" ></el-input>
-            </el-form-item>
+    width="30%"
+    @close="resetAddBookForm"
+    ><!-- 绑定 addBookDialogVisible，控制对话框的显示 --><!-- 关闭对话框时调用 resetAddBookForm() 重置表单 -->
+    <!-- 图书表单内容 -->
+    <el-form :model="addBookForm" ref="addBookForm" label-width="80px">
+        <!-- 图书名输入框 -->
+        <el-form-item label="图书名" prop="name" :rules="[ { required: true, message: '图书名不能为空', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.name"></el-input>
+        </el-form-item>
 
-            <el-form-item label="图书号" prop="card" :rules="[
-    { required: true, message: '图书号不能为空', trigger: 'blur' },
-   { pattern: /^\d+$/, message: '图书号必须为数字', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.card" ></el-input>
-            </el-form-item>
+        <!-- 图书号输入框 -->
+        <el-form-item label="图书号" prop="card" :rules="[ { required: true, message: '图书号不能为空', trigger: 'blur' }, { pattern: /^\d+$/, message: '图书号必须为数字', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.card"></el-input>
+        </el-form-item>
 
+        <!-- 作者输入框 -->
+        <el-form-item label="作者" prop="author" :rules="[ { required: true, message: '作者不能为空', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.author"></el-input>
+        </el-form-item>
 
-            <el-form-item label="作者" prop="author" :rules="[
-    { required: true, message: '作者不能为空', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.author"></el-input>
-            </el-form-item>
+        <!-- 数量输入框 -->
+        <el-form-item label="数量" prop="num" :rules="[ { required: true, message: '请输入数量', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.num" type="number"></el-input>
+        </el-form-item>
 
-            <el-form-item label="数量" prop="num" :rules="[
-    { required: true, message: '请输入数量', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.num" type="number"></el-input>
-            </el-form-item>
+        <!-- 出版社输入框 -->
+        <el-form-item label="出版社" prop="press" :rules="[ { required: true, message: '出版社不能为空', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.press"></el-input>
+        </el-form-item>
 
-            <el-form-item label="出版社" prop="press" :rules="[
-    { required: true, message: '出版社不能为空', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.press"></el-input>
-            </el-form-item>
-            <el-form-item label="分类" prop="type" :rules="[
-    { required: true, message: '请选择分类', trigger: 'blur' }
-]">
-                <el-select v-model="addBookForm.type">
-                    <el-option
-                            v-for="category in bookCategories"
-                            :key="category.tid"
-                            :label="category.name"
-                            :value="category.name">
-                    </el-option>
-                </el-select>
-            </el-form-item>
+        <!-- 分类选择框 -->
+        <el-form-item label="分类" prop="type" :rules="[ { required: true, message: '请选择分类', trigger: 'blur' } ]">
+            <el-select v-model="addBookForm.type">
+                <el-option
+                        v-for="category in bookCategories"
+                        :key="category.tid"
+                        :label="category.name"
+                        :value="category.name">
+                </el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
 
-        </el-form>
-
-        <!-- 操作按钮 -->
-        <span slot="footer" class="dialog-footer">
+    <!-- 操作按钮 -->
+    <span slot="footer" class="dialog-footer">
             <el-button @click="addBookDialogVisible = false">取消</el-button>
             <el-button type="primary" @click="submitAddBookForm">提交</el-button>
             <el-button type="primary" @click="submitAndContinue">提交并继续添加</el-button>
         </span>
     </el-dialog>
 
-
+    <!-- 修改图书对话框 -->
     <el-dialog
             title="修改图书"
             :visible.sync="editBookDialogVisible"
-            width="30%"
-            @close="resetAddBookForm"
-    >
-        <!-- 图书表单内容 -->
-        <el-form :model="addBookForm" ref="addBookForm" label-width="80px">
-            <el-form-item label="图书名" prop="name" :rules="[
-    { required: true, message: '图书名不能为空', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.name" ></el-input>
-            </el-form-item>
+    width="30%"
+    @close="resetAddBookForm"
+    ><!-- 绑定 editBookDialogVisible，控制对话框的显示 --><!-- 关闭对话框时调用 resetAddBookForm() 重置表单 -->
+    <!-- 图书表单内容 -->
+    <el-form :model="addBookForm" ref="addBookForm" label-width="80px">
+        <!-- 图书名输入框 -->
+        <el-form-item label="图书名" prop="name" :rules="[ { required: true, message: '图书名不能为空', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.name"></el-input>
+        </el-form-item>
 
-            <el-form-item label="图书号" prop="card" :rules="[
-    { required: true, message: '图书号不能为空', trigger: 'blur' },
-   { pattern: /^\d+$/, message: '图书号必须为数字', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.card" ></el-input>
-            </el-form-item>
+        <!-- 图书号输入框 -->
+        <el-form-item label="图书号" prop="card" :rules="[ { required: true, message: '图书号不能为空', trigger: 'blur' }, { pattern: /^\d+$/, message: '图书号必须为数字', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.card"></el-input>
+        </el-form-item>
 
+        <!-- 作者输入框 -->
+        <el-form-item label="作者" prop="author" :rules="[ { required: true, message: '作者不能为空', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.author"></el-input>
+        </el-form-item>
 
-            <el-form-item label="作者" prop="author" :rules="[
-    { required: true, message: '作者不能为空', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.author"></el-input>
-            </el-form-item>
+        <!-- 数量输入框 -->
+        <el-form-item label="数量" prop="num" :rules="[ { required: true, message: '请输入数量', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.num" type="number"></el-input>
+        </el-form-item>
 
-            <el-form-item label="数量" prop="num" :rules="[
-    { required: true, message: '请输入数量', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.num" type="number"></el-input>
-            </el-form-item>
+        <!-- 出版社输入框 -->
+        <el-form-item label="出版社" prop="press" :rules="[ { required: true, message: '出版社不能为空', trigger: 'blur' } ]">
+            <el-input v-model="addBookForm.press"></el-input>
+        </el-form-item>
 
-            <el-form-item label="出版社" prop="press" :rules="[
-    { required: true, message: '出版社不能为空', trigger: 'blur' }
-]">
-                <el-input v-model="addBookForm.press"></el-input>
-            </el-form-item>
-            <el-form-item label="分类" prop="type" :rules="[
-    { required: true, message: '请选择分类', trigger: 'blur' }
-]">
-                <el-select v-model="addBookForm.type">
-                    <el-option
-                            v-for="category in bookCategories"
-                            :key="category.tid"
-                            :label="category.name"
-                            :value="category.name">
-                    </el-option>
-                </el-select>
-            </el-form-item>
+        <!-- 分类选择框 -->
+        <el-form-item label="分类" prop="type" :rules="[ { required: true, message: '请选择分类', trigger: 'blur' } ]">
+            <el-select v-model="addBookForm.type">
+                <el-option
+                        v-for="category in bookCategories"
+                        :key="category.tid"
+                        :label="category.name"
+                        :value="category.name">
+                </el-option>
+            </el-select>
+        </el-form-item>
+    </el-form>
 
-        </el-form>
-
-        <!-- 操作按钮 -->
-        <span slot="footer" class="dialog-footer">
+    <!-- 操作按钮 -->
+    <span slot="footer" class="dialog-footer">
             <el-button @click="editBookDialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="submiteditBookForm">提交</el-button>
+            <el-button type="primary" @click="submitEditBookForm">提交</el-button>
         </span>
     </el-dialog>
 
-
-
-    <el-pagination
-
-            :page-sizes="[10, 20, 30, 40]"
-            :page-size="pageSize"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="counts"
-            @size-change="handleSizeChange"
-            :current-page.sync="page"
-            @current-change="handleCurrentChange"
-    ></el-pagination>
 </div>
 
 </body>
+
 <!--<script src="../../api/member.js"></script>-->
 
 <script>
