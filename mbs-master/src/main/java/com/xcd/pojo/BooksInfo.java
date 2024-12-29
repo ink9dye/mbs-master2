@@ -1,8 +1,9 @@
 package com.xcd.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-
+import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
+import java.util.Date;
 
 public class BooksInfo implements Serializable {
     @TableId
@@ -19,6 +20,10 @@ public class BooksInfo implements Serializable {
     private String press;
     //2 未借出 1 借出
     private Integer status;
+
+    // 新增字段：出版日期
+    @TableField("publish_date") // 映射数据库字段名为 publish_date
+    private Date publishDate;
 
     public Integer getStatus() {
         return status;
@@ -38,6 +43,7 @@ public class BooksInfo implements Serializable {
                 ", num=" + num +
                 ", press='" + press + '\'' +
                 ", type='" + type + '\'' +
+                ", publishDate=" + publishDate + // 确保 toString 包含 publishDate
                 '}';
     }
 
@@ -98,4 +104,8 @@ public class BooksInfo implements Serializable {
     public void setType(String type) {
         this.type = type == null ? null : type.trim();
     }
+
+    public Date getPublishDate() {return publishDate;}
+
+    public void setPublishDate(Date publishDate) {this.publishDate = publishDate;}
 }
