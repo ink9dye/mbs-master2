@@ -477,6 +477,7 @@
                 // console.log("val=" + val);
 
             },
+
             submitAndContinue() {
                 this.$refs['addBookForm'].validate(valid => {
                     if (valid) {
@@ -484,7 +485,6 @@
                             .then(res => {
                                 if (res.data.code === 1) {
                                     this.$message.success('添加图书成功！');
-                                    this.resetAddBookForm(); // 清空表单内容
                                     this.handleQuery();
                                 } else {
                                     this.$message.error(res.data.msg || '添加图书失败！');
@@ -498,6 +498,7 @@
                     }
                 });
             },
+
             editHandle(bookInfo) {
                 // 将选中行的图书信息传递给表单，以便进行编辑
                 this.addBookForm = { ...bookInfo };

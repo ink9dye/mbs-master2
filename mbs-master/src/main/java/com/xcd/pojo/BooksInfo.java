@@ -1,5 +1,5 @@
 package com.xcd.pojo;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
@@ -21,8 +21,8 @@ public class BooksInfo implements Serializable {
     //2 未借出 1 借出
     private Integer status;
 
-    // 新增字段：出版日期
-    @TableField("publish_date") // 映射数据库字段名为 publish_date
+    @TableField("publish_date") // 映射数据库字段
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8") // 设置返回格式和时区
     private Date publishDate;
 
     public Integer getStatus() {
